@@ -1,6 +1,6 @@
 from collections import abc
 from dataclasses import dataclass, field
-from typing import Any, List, Iterator
+from typing import Any, Iterator
 
 
 @dataclass
@@ -11,14 +11,9 @@ class ListNode:
 
 class LinkedList(abc.MutableSequence):
 
-    def __init__(self, nodes: List = None):
+    def __init__(self):
+        self.length = 0
         self.head = None
-        if nodes is not None:
-            node = ListNode(data=nodes.pop(0))
-            self.head = node
-            for elem in nodes:
-                node.next = ListNode(data=elem)
-                node = node.next
 
     def insert(self, data: Any, index: int = None, insert_before=True) -> None:
         new_node = ListNode(data)
@@ -30,10 +25,11 @@ class LinkedList(abc.MutableSequence):
             if insert_before:
                 self[index - 1].next = new_node
                 new_node.next = node
-                return
             else:
                 new_node.next = node.next
                 node.next = new_node
+
+        self.length += 1
 
     def delete(self, target_node_data) -> None:
         if self.head is None:
@@ -41,12 +37,14 @@ class LinkedList(abc.MutableSequence):
 
         if self.head.data == target_node_data:
             self.head = self.head.next
+            self.length -= 1
             return
 
         previous_node = self.head
         for node in self:
             if node.data == target_node_data:
                 previous_node.next = node.next
+                self.length -= 1
                 return
             previous_node = node
 
@@ -71,7 +69,7 @@ class LinkedList(abc.MutableSequence):
             node = node.next
 
     def __len__(self) -> int:
-        return sum(1 for _ in self)
+        return self.length
 
     def __repr__(self) -> str:
         return ", ".join(i.data for i in self)

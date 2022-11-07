@@ -15,10 +15,18 @@ class MyTestCase(unittest.TestCase):
         l.insert("e")
 
         l.insert("blah", 3)
+        l.insert("blah", 4, False)
 
         print(len(l))
         pprint(l)
         print(l[3])
+
+        del l[3]
+        print(len(l))
+        pprint(l)
+        del l[2]
+        print(len(l))
+        pprint(l)
 
 
 if __name__ == '__main__':
