@@ -35,7 +35,7 @@ class LinkedList(abc.MutableSequence):
                 new_node.next = node.next
                 node.next = new_node
 
-    def delete(self, target_node_data):
+    def delete(self, target_node_data) -> None:
         if self.head is None:
             raise Exception("List is empty")
 
@@ -74,13 +74,10 @@ class LinkedList(abc.MutableSequence):
         counter = 0
         for _ in self:
             counter += 1
-
         return counter
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         rep = []
         for i in self:
             rep.append(i.data)
-
-        rep.reverse()
         return ", ".join(rep)
