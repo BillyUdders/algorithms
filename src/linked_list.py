@@ -71,13 +71,7 @@ class LinkedList(abc.MutableSequence):
             node = node.next
 
     def __len__(self) -> int:
-        counter = 0
-        for _ in self:
-            counter += 1
-        return counter
+        return sum(1 for _ in self)
 
     def __repr__(self) -> str:
-        rep = []
-        for i in self:
-            rep.append(i.data)
-        return ", ".join(rep)
+        return ", ".join(i.data for i in self)
