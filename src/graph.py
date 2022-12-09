@@ -1,53 +1,63 @@
 from collections import defaultdict
+from dataclasses import dataclass, field
+from typing import Any, Dict, List
+
+
+@dataclass
+class GraphItem:
+    data: Any = field(compare=False)
+    weight: int = field(default=0)
 
 
 class Graph:
 
-    def __init__(self):
-        self.adj_list = defaultdict(list)
+    def __init__(self, initial_adj_list: dict = None):
+        if initial_adj_list:
+            self.adj_list = defaultdict(list, initial_adj_list)
+        else:
+            self.adj_list = defaultdict(list)
 
-    def __setitem__(self, key, value):
-        self.adj_list[key].append(value)
+    def __setitem__(self, key, value) -> None:
+        if isinstance(value, list):
+            self.adj_list[key] += value
+        else:
+            self.adj_list[key].append(value)
 
-    def dfs(self, s):
-        visited = defaultdict(bool)
-        stack = [s]
+    def get_adj_list(self) -> Dict:
+        return self.adj_list
 
-        while stack:
-            val = stack.pop()
+    def depth_first_search(self, s) -> List:
+        return self.search(s)
 
-            if not visited[val]:
-                visited[val] = True
+    def breadth_first_search(self, s) -> List:
+        return self.search(s, True)
 
-            for node in self.adj_list[val]:
-                if not visited[node]:
-                    stack.append(node)
-
-        return list(visited.keys())
-
-    def bfs(self, s):
-        visited = defaultdict(bool)
+    def search(self, s, breadth_first=False):
         queue = [s]
-        visited[s] = True
-
+        visited = []
         while queue:
-            s = queue.pop(0)
-            for i in self.adj_list[s]:
-                if not visited[i]:
-                    queue.append(i)
-                    visited[i] = True
+            current = queue.pop(0) if breadth_first else queue.pop()
+            visited.append(current)
+            for node in self.adj_list[current]:
+                queue.append(node)
+        return visited
 
-        return list(visited.keys())
+    def djisktras_shortest_path(self):
+        pass
 
 
 if __name__ == '__main__':
     g = Graph()
-    g[0] = 1
-    g[0] = 2
-    g[1] = 2
-    g[2] = 0
-    g[2] = 3
-    g[3] = 3
+    g["a"] = ["c", "b"]
+    g["b"] = "d"
+    g["c"] = "e"
+    g["d"] = "f"
+    g["e"] = []
+    g["f"] = []
 
-    print(g.dfs(2))
-    print(g.bfs(2))
+    print("\nAdjacency List:\n")
+    for k, v in g.get_adj_list().items():
+        print(k, v)
+    print("\nAlgorithms:\n")
+    print("Depth first", g.depth_first_search('a'))
+    print("Breadth first", g.breadth_first_search('a'))
