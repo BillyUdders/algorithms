@@ -19,7 +19,7 @@ AdjacencyList = Dict[Node, List[Vertex]]
 
 class Graph:
 
-    def __init__(self, initial_adj_list: dict = None):
+    def __init__(self, initial_adj_list: AdjacencyList = None):
         if initial_adj_list:
             self._adjacency_list: AdjacencyList = defaultdict(list, initial_adj_list)
         else:
