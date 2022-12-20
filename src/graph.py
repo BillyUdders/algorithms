@@ -1,6 +1,6 @@
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Dict
 
 
 @dataclass(frozen=True)
@@ -14,13 +14,16 @@ class Vertex:
     weight: int = field(default=1)
 
 
+AdjacencyList = Dict[Node, List[Vertex]]
+
+
 class Graph:
 
     def __init__(self, initial_adj_list: dict = None):
         if initial_adj_list:
-            self._adjacency_list = defaultdict(list, initial_adj_list)
+            self._adjacency_list: AdjacencyList = defaultdict(list, initial_adj_list)
         else:
-            self._adjacency_list = defaultdict(list)
+            self._adjacency_list: AdjacencyList = defaultdict(list)
 
     def __setitem__(self, key, value) -> None:
         if isinstance(value, list):
@@ -41,16 +44,16 @@ class Graph:
         return matrix
 
     @property
-    def adj_list(self) -> defaultdict:
+    def adj_list(self) -> AdjacencyList:
         return self._adjacency_list
 
-    def depth_first_search(self, s: Node) -> List:
+    def depth_first_search(self, s: Node) -> List[Node]:
         return self.search(s)
 
-    def breadth_first_search(self, s: Node) -> List:
+    def breadth_first_search(self, s: Node) -> List[Node]:
         return self.search(s, True)
 
-    def search(self, s: Node, breadth_first: bool = False):
+    def search(self, s: Node, breadth_first: bool = False) -> List[Node]:
         queue = [s]
         visited = []
 
