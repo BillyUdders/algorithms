@@ -3,27 +3,30 @@ from dataclasses import dataclass, field
 from typing import List, Dict
 
 
+# Simple edge class
 @dataclass(frozen=True)
 class Node:
     name: str | int
 
 
+# Represents a directed vertex in the adjacency list
 @dataclass
 class Vertex:
     data: Node
     weight: int = field(default=1)
 
 
-AdjacencyList = Dict[Node, List[Vertex]]
+# Adjacency list is a mapping for nodes to a list of vertices.
+AdjList = Dict[Node, List[Vertex]]
 
 
 class Graph:
 
-    def __init__(self, initial_adj_list: AdjacencyList = None):
+    def __init__(self, initial_adj_list: AdjList = None):
         if initial_adj_list:
-            self._adjacency_list: AdjacencyList = defaultdict(list, initial_adj_list)
+            self._adjacency_list: AdjList = defaultdict(list, initial_adj_list)
         else:
-            self._adjacency_list: AdjacencyList = defaultdict(list)
+            self._adjacency_list: AdjList = defaultdict(list)
 
     def __setitem__(self, key, value) -> None:
         if isinstance(value, list):
@@ -44,14 +47,17 @@ class Graph:
         return matrix
 
     @property
-    def adj_list(self) -> AdjacencyList:
+    def adj_list(self) -> AdjList:
         return self._adjacency_list
 
     def depth_first_search(self, s: Node) -> List[Node]:
         return self.search(s)
 
     def breadth_first_search(self, s: Node) -> List[Node]:
-        return self.search(s, True)
+        return self.search(s, breadth_first=True)
+
+    def has_path(self, src: Node, dst: Node) -> bool:
+        return dst in self.search(src)
 
     def search(self, s: Node, breadth_first: bool = False) -> List[Node]:
         queue = [s]
@@ -62,9 +68,11 @@ class Graph:
             current = current if isinstance(current, Node) else current.data
             visited.append(current)
             for node in self._adjacency_list[current]:
-                queue.append(node)
+                if node.data not in visited:
+                    queue.append(node)
 
         return visited
 
     def djisktras_shortest_path(self):
         pass
+        # Mark all the vertices as not visited

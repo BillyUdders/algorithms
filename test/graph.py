@@ -13,7 +13,8 @@ class GraphTestCase(unittest.TestCase):
         g[Node("c")] = Vertex(Node("e"), 10)
         g[Node("d")] = Vertex(Node("f"), 100)
         g[Node("e")] = []
-        g[Node("f")] = []
+        g[Node("f")] = [Vertex(Node('a'))]
+        g[Node("g")] = []
         self.graph = g
 
         # Change here if you change the Graph ^
@@ -23,7 +24,8 @@ class GraphTestCase(unittest.TestCase):
             Node("c"): [Vertex(Node("e"), 10)],
             Node("d"): [Vertex(Node("f"), 100)],
             Node("e"): [],
-            Node("f"): []
+            Node("f"): [Vertex(Node('a'))],
+            Node("g"): []
         }
 
     def test_dict_initialization(self):
@@ -34,12 +36,13 @@ class GraphTestCase(unittest.TestCase):
 
     def test_adjacency_matrix(self):
         expected = [
-            [0, 1, 1, 0, 0, 0],
-            [0, 0, 0, 14, 0, 0],
-            [0, 0, 0, 0, 10, 0],
-            [0, 0, 0, 0, 0, 100],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0]
+            [0, 1, 1, 0, 0, 0, 0],
+            [0, 0, 0, 14, 0, 0, 0],
+            [0, 0, 0, 0, 10, 0, 0],
+            [0, 0, 0, 0, 0, 100, 0],
+            [0, 0, 0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0]
         ]
         self.assertEqual(self.graph.adj_matrix, expected)
 
@@ -52,6 +55,10 @@ class GraphTestCase(unittest.TestCase):
         expected = ["a", "b", "d", "f", "c", "e"]
         result = [i.name for i in self.graph.depth_first_search(Node('a'))]
         self.assertEqual(expected, result)
+
+    def test_has_path(self):
+        self.assertTrue(self.graph.has_path(Node('a'), Node('f')), "Node A and F aren't connected and should be")
+        self.assertFalse(self.graph.has_path(Node('a'), Node('g')), "Node A and G are connected and shouldn't be")
 
 
 if __name__ == '__main__':
