@@ -35,7 +35,7 @@ class LinkedList(abc.MutableSequence):
         if self.head is None:
             raise Exception("List is empty")
 
-        if self.head.data == target_node_data:
+        if self.head.node == target_node_data:
             self.head = self.head.next
             self.length -= 1
             return

@@ -12,11 +12,11 @@ class Node:
 # Represents a directed vertex in the adjacency list
 @dataclass
 class Vertex:
-    data: Node
+    node: Node
     weight: int = field(default=1)
 
 
-# Adjacency list is a mapping for nodes to a list of vertices.
+# Adjacency list is a mapping of nodes to lists of vertices.
 AdjList = Dict[Node, List[Vertex]]
 
 
@@ -40,9 +40,9 @@ class Graph:
         keys = list(self._adjacency_list)
         matrix = [[0 for _ in range(size)] for _ in range(size)]
 
-        for i, vertices in self._adjacency_list.items():
+        for node, vertices in self._adjacency_list.items():
             for vtx in vertices:
-                matrix[keys.index(i)][keys.index(vtx.data)] = vtx.weight
+                matrix[keys.index(node)][keys.index(vtx.node)] = vtx.weight
 
         return matrix
 
@@ -64,14 +64,17 @@ class Graph:
         visited = []
 
         while queue:
-            current = queue.pop(0) if breadth_first else queue.pop()
-            current = current if isinstance(current, Node) else current.data
+            current = self.get_node(queue.pop(0) if breadth_first else queue.pop())
             visited.append(current)
-            for node in self._adjacency_list[current]:
-                if node.data not in visited:
-                    queue.append(node)
+            for vertex in self._adjacency_list[current]:
+                if vertex.node not in visited:
+                    queue.append(vertex)
 
         return visited
+
+    @staticmethod
+    def get_node(current: Node | Vertex):
+        return current if isinstance(current, Node) else current.node
 
     def djisktras_shortest_path(self):
         pass
