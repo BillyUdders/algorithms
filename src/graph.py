@@ -2,13 +2,14 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import List, Dict
 
-NodeName = str | int
+# Node name
+Label = str | int
 
 
 # Simple edge class
 @dataclass(frozen=True, order=True)
 class Node:
-    name: NodeName = field(compare=True)
+    name: Label = field(compare=True)
 
 
 # Represents a directed vertex in the adjacency list
@@ -24,13 +25,13 @@ AdjList = Dict[Node, List[Vertex]]
 
 class Graph:
 
-    def __init__(self, initial_values: Dict[NodeName, List[NodeName]] = None):
+    def __init__(self, initial_values: Dict[Label, List[Label]] = None):
         self._adjacency_list: AdjList = defaultdict(list)
         if initial_values:
-            for name, vtxs in initial_values.items():
-                if not vtxs:
+            for name, vertices in initial_values.items():
+                if not vertices:
                     self._adjacency_list[Node(name)] = []
-                for vtx in vtxs:
+                for vtx in vertices:
                     if isinstance(vtx, str):
                         self._adjacency_list[Node(name)].append(Vertex(Node(vtx)))
                     if isinstance(vtx, tuple):
