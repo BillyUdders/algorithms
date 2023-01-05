@@ -23,20 +23,18 @@ AdjList = Dict[Node, List[Vertex]]
 
 
 class Graph:
-    
-    def __init__(self, initial_adj_list: Dict[NodeName, List[NodeName]] = None):
-        if initial_adj_list:
-            self._adjacency_list: AdjList = defaultdict(list)
-            for name, vtxs in initial_adj_list.items():
+
+    def __init__(self, initial_values: Dict[NodeName, List[NodeName]] = None):
+        self._adjacency_list: AdjList = defaultdict(list)
+        if initial_values:
+            for name, vtxs in initial_values.items():
                 if not vtxs:
                     self._adjacency_list[Node(name)] = []
                 for vtx in vtxs:
-                    if isinstance(vtx, tuple):
-                        self._adjacency_list[Node(name)].append(Vertex(Node(vtx[0]), vtx[1]))
                     if isinstance(vtx, str):
                         self._adjacency_list[Node(name)].append(Vertex(Node(vtx)))
-        else:
-            self._adjacency_list: AdjList = defaultdict(list)
+                    if isinstance(vtx, tuple):
+                        self._adjacency_list[Node(name)].append(Vertex(Node(vtx[0]), vtx[1]))
 
     def __setitem__(self, key, value) -> None:
         if isinstance(value, list):
