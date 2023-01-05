@@ -18,6 +18,17 @@ class GraphTestCase(unittest.TestCase):
         self.graph = g
 
         # Change here if you change the Graph ^
+        self.input_adj_list = {
+            "a": ["c", "b"],
+            "b": [("d", 14)],
+            "c": [("e", 10)],
+            "d": [("f", 100)],
+            "e": [],
+            "f": ['a'],
+            "g": []
+        }
+
+        # Change here if you change the Graph ^
         self.expected_adj_dict = {
             Node("a"): [Vertex(Node("c")), Vertex(Node("b"))],
             Node("b"): [Vertex(Node("d"), 14)],
@@ -29,10 +40,14 @@ class GraphTestCase(unittest.TestCase):
         }
 
     def test_dict_initialization(self):
-        self.assertDictEqual(self.expected_adj_dict, Graph(self.expected_adj_dict).adj_list)
+        expected = self.expected_adj_dict
+        actual = Graph(self.input_adj_list).adj_list
+        self.assertDictEqual(expected, actual)
 
     def test_adjacency_list(self):
-        self.assertDictEqual(self.expected_adj_dict, self.graph.adj_list)
+        expected = self.expected_adj_dict
+        actual = self.graph.adj_list
+        self.assertDictEqual(expected, actual)
 
     def test_adjacency_matrix(self):
         expected = [
@@ -44,7 +59,7 @@ class GraphTestCase(unittest.TestCase):
             [1, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0]
         ]
-        self.assertEqual(self.graph.adj_matrix, expected)
+        self.assertEqual(expected, self.graph.adj_matrix)
 
     def test_breadth_first_search(self):
         expected = ["a", "c", "b", "e", "d", "f"]

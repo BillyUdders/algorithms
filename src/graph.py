@@ -2,11 +2,13 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import List, Dict
 
+NodeName = str | int
+
 
 # Simple edge class
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Node:
-    name: str | int
+    name: NodeName = field(compare=True)
 
 
 # Represents a directed vertex in the adjacency list
@@ -21,10 +23,18 @@ AdjList = Dict[Node, List[Vertex]]
 
 
 class Graph:
-
-    def __init__(self, initial_adj_list: AdjList = None):
+    
+    def __init__(self, initial_adj_list: Dict[NodeName, List[NodeName]] = None):
         if initial_adj_list:
-            self._adjacency_list: AdjList = defaultdict(list, initial_adj_list)
+            self._adjacency_list: AdjList = defaultdict(list)
+            for name, vtxs in initial_adj_list.items():
+                if not vtxs:
+                    self._adjacency_list[Node(name)] = []
+                for vtx in vtxs:
+                    if isinstance(vtx, tuple):
+                        self._adjacency_list[Node(name)].append(Vertex(Node(vtx[0]), vtx[1]))
+                    if isinstance(vtx, str):
+                        self._adjacency_list[Node(name)].append(Vertex(Node(vtx)))
         else:
             self._adjacency_list: AdjList = defaultdict(list)
 
@@ -64,7 +74,7 @@ class Graph:
         visited = []
 
         while queue:
-            current = self.get_node(queue.pop(0) if breadth_first else queue.pop())
+            current: Node = self.get_node(queue.pop(0) if breadth_first else queue.pop())
             visited.append(current)
             for vertex in self._adjacency_list[current]:
                 if vertex.node not in visited:
@@ -73,7 +83,7 @@ class Graph:
         return visited
 
     @staticmethod
-    def get_node(current: Node | Vertex):
+    def get_node(current: Node | Vertex) -> Node:
         return current if isinstance(current, Node) else current.node
 
     def djisktras_shortest_path(self):
