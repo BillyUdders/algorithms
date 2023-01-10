@@ -17,8 +17,7 @@ class MyTestCase(unittest.TestCase):
                              [DEAD, DEAD, DEAD, DEAD],
                              [DEAD, ALIVE, DEAD, DEAD]])
 
-        n = update(input_a)
-        self.assertTrue(np.array_equal(n, expected))
+        self.assertTrue(np.array_equal(update(input_a), expected))
 
 
 if __name__ == '__main__':

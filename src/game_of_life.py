@@ -1,3 +1,5 @@
+import sys
+
 import numpy as np
 import pygame as pg
 
@@ -46,7 +48,7 @@ def update(old_state: np.array):
 if __name__ == '__main__':
     scaling_factor = 5
     init_size = (100, 100)
-    screen_size = (init_size[0] * scaling_factor, init_size[1] * scaling_factor)
+    screen_size = tuple(scaling_factor * size for size in init_size)
 
     pg.init()
     display = pg.display.set_mode(screen_size)
@@ -56,6 +58,7 @@ if __name__ == '__main__':
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 pg.quit()
+                sys.exit()
         state = update(state)
         surf = pg.surfarray.make_surface(state)
         display.blit(pg.transform.scale(surf, screen_size), (0, 0))

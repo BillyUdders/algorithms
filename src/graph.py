@@ -69,21 +69,19 @@ class Graph:
         return dst in self.search(src)
 
     def search(self, s: Node, breadth_first: bool = False) -> List[Node]:
+        def get_node(n: Node | Vertex) -> Node:
+            return n if isinstance(n, Node) else n.node
+
         queue = [s]
         visited = []
-
         while queue:
-            current: Node = self.get_node(queue.pop(0) if breadth_first else queue.pop())
+            current: Node = get_node(queue.pop(0) if breadth_first else queue.pop())
             visited.append(current)
             for vertex in self._adjacency_list[current]:
                 if vertex.node not in visited:
                     queue.append(vertex)
 
         return visited
-
-    @staticmethod
-    def get_node(current: Node | Vertex) -> Node:
-        return current if isinstance(current, Node) else current.node
 
     def djisktras_shortest_path(self):
         pass
